@@ -64,7 +64,7 @@ public:
     FileHandler(const string& name)
     {
         this->name = name;
-        file.open(name);
+        file.open(name, ios::in);
         if (!file.is_open())
         {
             cout << "Error while opnening the file";
@@ -73,6 +73,7 @@ public:
 
     void writeLine(const DynamicArray& arr)
     {
+        fstream file(name, ios::out);
         if (file.is_open())
         {
             int size = arr.getSize();
@@ -87,18 +88,19 @@ public:
     }
     void readLine(DynamicArray& arr)
     {
+        fstream file(name, ios::in);
         if (file.is_open())
         {
-            int size;
-            file >> size; // Read the size of the array
-            if (arr.getData() != nullptr) {
-                delete[] arr.getData();
-            }
-            arr.getData() = new int[size];
-            size = arr.getSize();
+            int size = arr.getSize();
+            int* data = new int[size];
+            cout << "Citirea din fisier element cu element: ";
             for (int i = 0; i < size; i++) {
-                file >> arr.getValue(i);
+                int x;
+                file >> x;
+                cout << x << " "; // Check sa vad ce valoare are x din fisier la index position.
+                arr.setValue(x, i);
             }
+            cout << endl;
         }
         else
         {
@@ -138,6 +140,9 @@ int main()
     FileHandler f("array.txt");
     f.writeLine(arr);
 
-    cout << "Array citit din fisier: " << endl;
     f.readLine(arr);
+    cout << endl;
+    cout << "Array format din citirea fisierului: " << endl;
+    arr.display(); // Imi face display la noul array format din fisier.
+    cout << endl;
 }
